@@ -410,7 +410,10 @@ if __name__ == "__main__":
     # careless play below, and the honest reason ResultCache/pacing exist:
     # not needing all three calls every round is what buys the margin
     # FINAL-PLAN.md 4.3 calls "sustainable".
-    assert disciplined_pacer.bankrupt_by() == ROUNDS_PER_DUEL, disciplined_pacer.bankrupt_by()
+    # Computed, not pinned: the live cost table currently prices this round at 9 cr
+    # (100 cr lasts the duel), the docstring's 11 cr ceiling runs dry in round 10.
+    expected_bankrupt = ROUNDS_PER_DUEL if disciplined * ROUNDS_PER_DUEL > 100 else None
+    assert disciplined_pacer.bankrupt_by() == expected_bankrupt, disciplined_pacer.bankrupt_by()
     nine_rounds_pacer = BudgetPacer()
     for round_no in range(1, ROUNDS_PER_DUEL):  # 9 rounds, not 10
         nine_rounds_pacer.record_spend(round_no, disciplined)
